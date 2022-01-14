@@ -11,29 +11,29 @@
       "id": 2,
       "name": "LJMO",
       "amount": 10000,
-      "searchScore": 0.1,
-      "contactScore": 0.1
+      "transferScore": 0.1,
+      "clickScore": 0.1
     },
     {
       "id": 3,
       "name": "TITR",
       "amount": 3500,
-      "searchScore": 0.1,
-      "contactScore": 0.1
+      "transferScore": 0.1,
+      "clickScore": 0.1
     },
     {
       "id": 4,
       "name": "PEL",
       "amount": 25000,
-      "searchScore": 0.1,
-      "contactScore": 0.1
+      "transferScore": 0.1,
+      "clickScore": 0.1
     },
     {
       "id": 5,
       "name": "LIV A",
       "amount": 13000,
-      "searchScore": 0.1,
-      "contactScore": 0.1
+      "transferScore": 0.1,
+      "clickScore": 0.1
     }
   ],
   "search": {}
