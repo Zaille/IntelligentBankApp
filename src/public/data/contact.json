@@ -1,0 +1,53 @@
+{
+  "contact": [
+    {
+      "firstName": "Antoine",
+      "lastName": "Humbert",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    },
+    {
+      "firstName": "Lucas",
+      "lastName": "Hervouet",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    },
+    {
+      "firstName": "Hugo",
+      "lastName": "Revault D'allonnes",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    },
+    {
+      "firstName": "Annabel",
+      "lastName": "Leriche",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    },
+    {
+      "firstName": "Aleksa",
+      "lastName": "Albijanic",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    },
+    {
+      "firstName": "Étienne",
+      "lastName": "Lécrivain",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    },
+    {
+      "firstName": "Johann",
+      "lastName": "Bournazel",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    },
+    {
+      "firstName": "Maxence",
+      "lastName": "Dominici",
+      "searchScore": 0.1,
+      "contactScore": 0.1
+    }
+  ],
+  "search": {}
+}
