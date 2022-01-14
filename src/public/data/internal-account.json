@@ -1,8 +1,8 @@
 {
-  "contact": [
+  "account": [
     {
       "id": 1,
-      "name": "CCHQ",
+      "name": "main",
       "amount": 40000,
       "transferScore": 0.1,
       "clickScore": 0.1

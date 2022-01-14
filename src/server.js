@@ -22,6 +22,15 @@ app.get('/profile/:contact_id', function (req, res) {
     });
 });
 
+app.get('/accounts/:account_name', function (req, res) {
+    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+        json.account.forEach(account => {
+            if( account.name === req.params.account_name ) res.json(account);
+        })
+    });
+});
+
 /* Default path */
 app.get('*', function (req, res) {
     res.sendFile('public/index.html', {'root': __dirname});

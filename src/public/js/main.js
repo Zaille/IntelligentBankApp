@@ -30,7 +30,6 @@ const renderTemplate = async function (template) {
 
 page('/', async () => {
     await renderTemplate(templates('/templates/home.mustache'));
-
     document.getElementById('button-contacts').onclick = () => {
         page.redirect('/contact');
     }
@@ -38,12 +37,27 @@ page('/', async () => {
     document.getElementById('button-accounts').onclick = () => {
         page.redirect('/account');
     }
+
+    const result = await fetch('/accounts/main', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let account = await result.json();
+    document.getElementById("p-amount").innerHTML = account.amount + '€';
 });
 
 page('/contact', async () => {
     await renderTemplate(templates('/templates/list.mustache'));
 
     document.getElementById('h2-list').innerHTML = "List of Beneficiaries";
+
+    document.getElementById('button-create').onclick = () => {
+        page.redirect('/new-contact');
+    }
 
     const result = await fetch('/contacts', {
         headers: {
@@ -70,12 +84,48 @@ page('/contact', async () => {
 page('/contact/:contact_id', async (req) => {
     await renderTemplate(templates('/templates/profile.mustache'));
 
+    const firstname = document.getElementById("fname-value");
+    const lastname = document.getElementById("lname-value");
+    const iban = document.getElementById("iban-value");
+    const edit = document.getElementById("div-edit");
+    const button = document.getElementById("div-button");
+
+    firstname.readOnly = true;
+    lastname.readOnly = true;
+    iban.readOnly = true;
+
+    edit.hidden = true;
+
     document.getElementById("button-transfer").onclick = () => {
         page.redirect('/external_transfer/' + req.params.contact_id);
     }
 
     document.getElementById("button-edit").onclick = () => {
+        firstname.readOnly = false;
+        lastname.readOnly = false;
+        iban.readOnly = false;
 
+        edit.hidden = false;
+        button.hidden = true;
+    }
+
+    document.getElementById("button-validate").onclick = () => {
+        firstname.readOnly = true;
+        lastname.readOnly = true;
+        iban.readOnly = true;
+
+        edit.hidden = true;
+        button.hidden = false;
+        // TODO : Update database
+    }
+
+    document.getElementById("button-cancel").onclick = () => {
+        firstname.readOnly = true;
+        lastname.readOnly = true;
+        iban.readOnly = true;
+
+        edit.hidden = true;
+        button.hidden = false;
     }
 
     const result = await fetch('/profile/' + req.params.contact_id, {
@@ -88,9 +138,25 @@ page('/contact/:contact_id', async (req) => {
 
     let contact = await result.json();
 
-    document.getElementById("fname-value").innerHTML = contact.firstName;
-    document.getElementById("lname-value").innerHTML = contact.lastName;
-    document.getElementById("iban-value").innerHTML = contact.IBAN;
+    firstname.value = contact.firstName;
+    lastname.value = contact.lastName;
+    iban.value = contact.IBAN;
+});
+
+page('/new-contact', async () => {
+    await renderTemplate(templates('/templates/profile.mustache'));
+
+    document.getElementById("div-button").hidden = true;
+
+    document.getElementById("button-validate").onclick = () => {
+        // TODO : Add beneficiary in database
+
+        // page.redirect('/templates/contact/')
+    }
+
+    document.getElementById("button-cancel").onclick = () => {
+        page.redirect('/contact')
+    }
 });
 
 page('/external_transfer/:contact_id', async (req) => {
