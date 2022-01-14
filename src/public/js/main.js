@@ -29,7 +29,7 @@ const renderTemplate = async function (template) {
 /********** PAGE **********/
 
 page('/', async () => {
-    await renderTemplate(templates('templates/home.mustache'));
+    await renderTemplate(templates('/templates/home.mustache'));
 
     document.getElementById('button-contacts').onclick = () => {
         page.redirect('/contact');
@@ -41,7 +41,10 @@ page('/', async () => {
 });
 
 page('/contact', async () => {
-    await renderTemplate(templates('templates/list.mustache'));
+    await renderTemplate(templates('/templates/list.mustache'));
+
+    document.getElementById('h2-list').innerHTML = "List of Beneficiaries";
+
     const result = await fetch('/contacts', {
         headers: {
             'Accept': 'application/json',
@@ -52,8 +55,8 @@ page('/contact', async () => {
     let contacts = await result.json();
 
     contacts.forEach((contact) => {
-        var div = document.createElement("div");
-        var p = document.createElement("p");
+        const div = document.createElement("div");
+        const p = document.createElement("p");
 
         div.onclick = () => {
             page.redirect('/contact/' + contact.id);
@@ -65,7 +68,15 @@ page('/contact', async () => {
 });
 
 page('/contact/:contact_id', async (req) => {
-    await renderTemplate(templates('templates/test.mustache'));
+    await renderTemplate(templates('/templates/profile.mustache'));
+
+    document.getElementById("button-transfer").onclick = () => {
+        page.redirect('/external_transfer/' + req.params.contact_id);
+    }
+
+    document.getElementById("button-edit").onclick = () => {
+
+    }
 
     const result = await fetch('/profile/' + req.params.contact_id, {
         headers: {
@@ -79,6 +90,19 @@ page('/contact/:contact_id', async (req) => {
 
     document.getElementById("fname-value").innerHTML = contact.firstName;
     document.getElementById("lname-value").innerHTML = contact.lastName;
+    document.getElementById("iban-value").innerHTML = contact.IBAN;
+});
+
+page('/external_transfer/:contact_id', async (req) => {
+    await renderTemplate(templates('/templates/transfer.mustache'));
+
+    document.getElementById("button-validate").onclick = () => {
+        page.redirect('/');
+    }
+
+    document.getElementById("button-cancel").onclick = () => {
+        page.redirect('/profile/' + req.params.contact_id);
+    }
 });
 
 page('/account', async () => {
