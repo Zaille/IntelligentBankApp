@@ -2,7 +2,7 @@
 const templates = (() => {
     let templates = {};
     return function load(url) {
-        if (templates[url]) {
+            if (templates[url]) {
             return Promise.resolve(templates[url]); // systeme de caching
         } else {
             return fetch(url)
@@ -55,9 +55,30 @@ page('/contact', async () => {
         var div = document.createElement("div");
         var p = document.createElement("p");
 
+        div.onclick = () => {
+            page.redirect('/contact/' + contact.id);
+        }
+
         p.innerHTML = `${contact.firstName} ${contact.lastName}`;
         document.getElementById("list").appendChild(div).appendChild(p);
     })
+});
+
+page('/contact/:contact_id', async (req) => {
+    await renderTemplate(templates('templates/test.mustache'));
+
+    const result = await fetch('/profile/' + req.params.contact_id, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let contact = await result.json();
+
+    document.getElementById("fname-value").innerHTML = contact.firstName;
+    document.getElementById("lname-value").innerHTML = contact.lastName;
 });
 
 page('/account', async () => {

@@ -9,7 +9,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/contacts', function (req, res) {
     fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
         const json = JSON.parse(data);
-        res.json(json.contact);
+        res.json(json.beneficiary);
+    });
+});
+
+app.get('/profile/:contact_id', function (req, res) {
+    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+        json.beneficiary.forEach(contact => {
+            if( contact.id === parseInt(req.params.contact_id) ) res.json(contact);
+        })
     });
 });
 
@@ -17,23 +26,6 @@ app.get('/contacts', function (req, res) {
 app.get('*', function (req, res) {
     res.sendFile('public/index.html', {'root': __dirname});
 });
-
-// app.get('/', function (req, res) {
-//     console.log("coucou");
-// });
-//
-
-app.get('/account', function (req, res) {
-    console.log("coucou");
-});
-
-// app.get('/profile', function (req, res) {
-//     res.sendFile('public/templates/profile.mustache', {'root': __dirname});
-// });
-//
-// app.get('/transfer', function (req, res) {
-//     res.sendFile('public/templates/transfer.mustache', {'root': __dirname});
-// });
 
 /* Save updated dataset */
 // TODO
