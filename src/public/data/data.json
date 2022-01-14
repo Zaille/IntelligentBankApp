@@ -1,6 +1,7 @@
 {
   "contact": [
     {
+      "id": 1,
       "firstName": "Antoine",
       "lastName": "Humbert",
       "searchScore": 0.1,

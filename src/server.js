@@ -1,30 +1,39 @@
 const path = require("path");
-const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require("fs");
 
 const express = require('express');
 const app = express();
 
-const jsonParser = bodyParser.json();
-
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/contacts', function (req, res) {
+    fs.readFile('public/data/data.json', 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+        res.json(json.contact);
+    });
+});
+
 /* Default path */
-app.get('/', function (req, res) {
+app.get('*', function (req, res) {
     res.sendFile('public/index.html', {'root': __dirname});
 });
 
-app.get('/list', function (req, res) {
-    res.sendFile('public/list.html', {'root': __dirname});
+// app.get('/', function (req, res) {
+//     console.log("coucou");
+// });
+//
+
+app.get('/account', function (req, res) {
+    console.log("coucou");
 });
 
-app.get('/profile', function (req, res) {
-    res.sendFile('public/profile.html', {'root': __dirname});
-});
-
-app.get('/transfer', function (req, res) {
-    res.sendFile('public/transfer.html', {'root': __dirname});
-});
+// app.get('/profile', function (req, res) {
+//     res.sendFile('public/templates/profile.mustache', {'root': __dirname});
+// });
+//
+// app.get('/transfer', function (req, res) {
+//     res.sendFile('public/templates/transfer.mustache', {'root': __dirname});
+// });
 
 /* Save updated dataset */
 // TODO
