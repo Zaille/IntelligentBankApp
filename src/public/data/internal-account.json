@@ -2,50 +2,36 @@
   "contact": [
     {
       "id": 1,
-      "firstName": "Antoine",
-      "lastName": "Humbert",
+      "name": "CCHQ",
+      "amount": 40000,
+      "transferScore": 0.1,
+      "clickScore": 0.1
+    },
+    {
+      "id": 2,
+      "name": "LJMO",
+      "amount": 10000,
       "searchScore": 0.1,
       "contactScore": 0.1
     },
     {
-      "firstName": "Lucas",
-      "lastName": "Hervouet",
+      "id": 3,
+      "name": "TITR",
+      "amount": 3500,
       "searchScore": 0.1,
       "contactScore": 0.1
     },
     {
-      "firstName": "Hugo",
-      "lastName": "Revault D'allonnes",
+      "id": 4,
+      "name": "PEL",
+      "amount": 25000,
       "searchScore": 0.1,
       "contactScore": 0.1
     },
     {
-      "firstName": "Annabel",
-      "lastName": "Leriche",
-      "searchScore": 0.1,
-      "contactScore": 0.1
-    },
-    {
-      "firstName": "Aleksa",
-      "lastName": "Albijanic",
-      "searchScore": 0.1,
-      "contactScore": 0.1
-    },
-    {
-      "firstName": "Étienne",
-      "lastName": "Lécrivain",
-      "searchScore": 0.1,
-      "contactScore": 0.1
-    },
-    {
-      "firstName": "Johann",
-      "lastName": "Bournazel",
-      "searchScore": 0.1,
-      "contactScore": 0.1
-    },
-    {
-      "firstName": "Maxence",
-      "lastName": "Dominici",
+      "id": 5,
+      "name": "LIV A",
+      "amount": 13000,
       "searchScore": 0.1,
       "contactScore": 0.1
     }
