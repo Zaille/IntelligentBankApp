@@ -7,7 +7,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/contacts', function (req, res) {
-    fs.readFile('public/data/data.json', 'utf8', (err, data) => {
+    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
         const json = JSON.parse(data);
         res.json(json.contact);
     });

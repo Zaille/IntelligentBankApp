@@ -1,5 +1,4 @@
-// fonction utilitaire permettant de faire du
-// lazy loading (chargement à la demande) des templates
+// Utility function for lazy loading of templates
 const templates = (() => {
     let templates = {};
     return function load(url) {

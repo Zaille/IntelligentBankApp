@@ -1,0 +1,62 @@
+{
+  "beneficiary": [
+    {
+      "id": 1,
+      "firstName": "Antoine",
+      "lastName": "Humbert",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "LT623685877971356213"
+    },
+    {
+      "firstName": "Lucas",
+      "lastName": "Hervouet",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "GT82548278912345724988794643"
+    },
+    {
+      "firstName": "Hugo",
+      "lastName": "Revault D'allonnes",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "EE671268533723266740"
+    },
+    {
+      "firstName": "Annabel",
+      "lastName": "Leriche",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": ""
+    },
+    {
+      "firstName": "Aleksa",
+      "lastName": "Albijanic",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "IE69BOFI900017352248"
+    },
+    {
+      "firstName": "Étienne",
+      "lastName": "Lécrivain",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "SN22D85776372976559133696432"
+    },
+    {
+      "firstName": "Johann",
+      "lastName": "Bournazel",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "BA861024572914937364"
+    },
+    {
+      "firstName": "Maxence",
+      "lastName": "Dominici",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "LI3808800121276169917"
+    }
+  ],
+  "search": {}
+}
