@@ -14,14 +14,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 /********** GET **********/
 
 app.get('/contacts', function (req, res) {
-    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/external-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
         res.json(json.beneficiary);
     });
 });
 
 app.get('/profile/:contact_id', function (req, res) {
-    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/external-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
         json.beneficiary.forEach(contact => {
             if( contact.id === parseInt(req.params.contact_id) ) res.json(contact);
@@ -30,14 +30,14 @@ app.get('/profile/:contact_id', function (req, res) {
 });
 
 app.get('/accounts', function (req, res) {
-    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/internal-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
         res.json(json.account);
     });
 });
 
 app.get('/accounts/:account_id', function (req, res) {
-    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/internal-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
         json.account.forEach(account => {
             if( account.id === parseInt(req.params.account_id) ) res.json(account);
@@ -49,7 +49,7 @@ app.get('/accounts/:account_id', function (req, res) {
 
 app.post('/add_contact', function (req, res) {
 
-    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/external-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
 
         let newContact = {
@@ -63,7 +63,7 @@ app.post('/add_contact', function (req, res) {
 
         json.beneficiary.push(newContact);
 
-        fs.writeFile('public/data/external-account.json', JSON.stringify(json), function(err) {
+        fs.writeFile(path.join(__dirname, 'public/data/external-account.json'), JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
             } else {
@@ -75,7 +75,7 @@ app.post('/add_contact', function (req, res) {
 
 app.post('/update_contact', function (req, res) {
 
-    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/external-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
 
         for(let i = 0; i < json.beneficiary.length; i++ ){
@@ -86,7 +86,7 @@ app.post('/update_contact', function (req, res) {
             }
         }
 
-        fs.writeFile('public/data/external-account.json', JSON.stringify(json), function(err) {
+        fs.writeFile(path.join(__dirname, 'public/data/external-account.json'), JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
             } else {
@@ -98,7 +98,7 @@ app.post('/update_contact', function (req, res) {
 
 app.post('/remove_contact', function (req, res) {
 
-    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/external-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
 
         let beneficiary = [];
@@ -111,7 +111,7 @@ app.post('/remove_contact', function (req, res) {
 
         json.beneficiary = beneficiary;
 
-        fs.writeFile('public/data/external-account.json', JSON.stringify(json), function(err) {
+        fs.writeFile(path.join(__dirname, 'public/data/external-account.json'), JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
             } else {
@@ -123,7 +123,7 @@ app.post('/remove_contact', function (req, res) {
 
 app.post('/update_amount', function (req, res) {
 
-    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/internal-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
 
         for(let i = 0; i < json.account.length; i++ ){
@@ -131,7 +131,7 @@ app.post('/update_amount', function (req, res) {
                 if(req.body.type === "deduct") json.account[i].amount -= parseInt(req.body.amount);
                 else json.account[i].amount += parseInt(req.body.amount);
 
-                fs.writeFile('public/data/internal-account.json', JSON.stringify(json), function(err) {
+                fs.writeFile(path.join(__dirname, 'public/data/internal-account.json'), JSON.stringify(json), function(err) {
                     if (err) {
                         return console.error(err);
                     } else {
@@ -145,7 +145,7 @@ app.post('/update_amount', function (req, res) {
 
 app.post('/update_account', function (req, res) {
 
-    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/internal-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
 
         for(let i = 0; i < json.account.length; i++ ){
@@ -154,7 +154,7 @@ app.post('/update_account', function (req, res) {
             }
         }
 
-        fs.writeFile('public/data/internal-account.json', JSON.stringify(json), function(err) {
+        fs.writeFile(path.join(__dirname, 'public/data/internal-account.json'), JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
             } else {
@@ -166,7 +166,7 @@ app.post('/update_account', function (req, res) {
 
 app.post('/remove_account', function (req, res) {
 
-    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/internal-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
 
         let accounts = [];
@@ -179,7 +179,7 @@ app.post('/remove_account', function (req, res) {
 
         json.account = accounts;
 
-        fs.writeFile('public/data/internal-account.json', JSON.stringify(json), function(err) {
+        fs.writeFile(path.join(__dirname, 'public/data/internal-account.json'), JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
             } else {
@@ -191,7 +191,7 @@ app.post('/remove_account', function (req, res) {
 
 app.post('/add_account', function (req, res) {
 
-    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public/data/internal-account.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
 
         let newAccount = {
@@ -204,7 +204,7 @@ app.post('/add_account', function (req, res) {
 
         json.account.push(newAccount);
 
-        fs.writeFile('public/data/internal-account.json', JSON.stringify(json), function(err) {
+        fs.writeFile(path.join(__dirname, 'public/data/internal-account.json'), JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
             } else {
