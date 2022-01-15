@@ -133,7 +133,7 @@ page('/contact', async () => {
     let contact_list = [];
 
     search.oninput = async () => {
-contact_list = [];
+        contact_list = [];
 
         if (search.value.length > 3) { // If the user has typed more than 4 characters: Start the name search
             const requestOptions = {
@@ -677,7 +677,7 @@ page('/internal_transfer/:account_id', async (req) => {
 
     document.getElementById('div-beneficiary').hidden = true;
 
-    const result = await fetch('/accounts', {
+    let result = await fetch('/accounts', {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
@@ -687,9 +687,38 @@ page('/internal_transfer/:account_id', async (req) => {
 
     let accounts = await result.json();
 
-    const select = document.getElementById('select-account');
+    result = await fetch('/account/score', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let accounts_scores = await result.json();
+
+    let account_list = [];
 
     accounts.forEach((account) => {
+        accounts_scores.forEach((score) => {
+            if(account.id === score.id){
+                const confidence = parseFloat(score.transferScore) * parseFloat(score.clickScore);
+                account_list.push({
+                    id: account.id,
+                    name: account.name,
+                    confidence: confidence
+                });
+            }
+        })
+    });
+
+    account_list.sort((a, b) => {
+        return a.confidence < b.confidence;
+    })
+
+    const select = document.getElementById('select-account');
+
+    account_list.forEach((account) => {
         if(account.id !== parseInt(req.params.account_id)) {
             const option = document.createElement("option");
             option.value = account.id;
