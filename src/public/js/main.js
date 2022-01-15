@@ -31,6 +31,7 @@ const renderTemplate = async function (template) {
 page('/', async () => {
     await renderTemplate(templates('/templates/home.mustache'));
     document.getElementById('button-contacts').onclick = () => {
+
         page.redirect('/contact');
     }
 
@@ -258,6 +259,8 @@ page('/account', async () => {
     await renderTemplate(templates('templates/list.mustache'));
 
     document.getElementById('h2-list').innerHTML = "List of Accounts";
+
+    document.getElementById('div-search').hidden = true;
 
     document.getElementById('button-create').onclick = () => {
         page.redirect('/new-account');
