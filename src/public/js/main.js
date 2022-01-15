@@ -138,6 +138,8 @@ page('/contact/:contact_id', async (req) => {
 
     let contact = await result.json();
 
+    console.log(contact);
+
     firstname.value = contact.firstName;
     lastname.value = contact.lastName;
     iban.value = contact.IBAN;
@@ -148,10 +150,21 @@ page('/new-contact', async () => {
 
     document.getElementById("div-button").hidden = true;
 
-    document.getElementById("button-validate").onclick = () => {
-        // TODO : Add beneficiary in database
+    document.getElementById("button-validate").onclick = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                firstname: document.getElementById("fname-value").value,
+                lastname: document.getElementById("lname-value").value,
+                iban: document.getElementById("iban-value").value
+            })
+        };
 
-        // page.redirect('/templates/contact/')
+        const result = await fetch('/add_contact', requestOptions);
+
+        let json = await result.json();
+        page.redirect('/contact/' + json.id);
     }
 
     document.getElementById("button-cancel").onclick = () => {
