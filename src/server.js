@@ -79,8 +79,6 @@ app.post('/update_contact', function (req, res) {
             }
         }
 
-        // console.log(json.beneficiary);
-
         fs.writeFile('public/data/external-account.json', JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
@@ -113,6 +111,28 @@ app.post('/remove_contact', function (req, res) {
                 res.end();
             }
         });
+    });
+});
+
+app.post('/update_amount', function (req, res) {
+
+    fs.readFile('public/data/internal-account.json', 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        for(let i = 0; i < json.account.length; i++ ){
+            if(json.account[i].name === req.body.name) {
+                if(req.body.type === "deduct") json.account[i].amount -= parseInt(req.body.amount);
+                else json.account[i].amount += parseInt(req.body.amount);
+
+                fs.writeFile('public/data/internal-account.json', JSON.stringify(json), function(err) {
+                    if (err) {
+                        return console.error(err);
+                    } else {
+                        res.end();
+                    }
+                });
+            }
+        }
     });
 });
 

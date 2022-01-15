@@ -199,12 +199,38 @@ page('/new-contact', async () => {
 page('/external_transfer/:contact_id', async (req) => {
     await renderTemplate(templates('/templates/transfer.mustache'));
 
-    document.getElementById("button-validate").onclick = () => {
+    const result = await fetch('/profile/' + req.params.contact_id, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let contact = await result.json();
+
+    document.getElementById('input-beneficiary').value = `${contact.firstName} ${contact.lastName}`;
+
+    document.getElementById("button-validate").onclick = async () => {
+        const amount = document.getElementById("input-amount");
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: "main",
+                type: "deduct",
+                amount: (amount.value ? amount.value : amount.placeholder)
+            })
+        };
+
+        await fetch('/update_amount', requestOptions);
+
         page.redirect('/');
     }
 
     document.getElementById("button-cancel").onclick = () => {
-        page.redirect('/profile/' + req.params.contact_id);
+        page.redirect('/contact/' + req.params.contact_id);
     }
 });
 
