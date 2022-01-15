@@ -1,1 +1,69 @@
-{"beneficiary":[{"id":1,"firstName":"Antoine","lastName":"Humbert","searchScore":0.1,"transferScore":0.1,"IBAN":"LT623685877971356213"},{"id":2,"firstName":"Luc","lastName":"Hervouet","searchScore":0.1,"transferScore":0.1,"IBAN":"GT82548278912345724988794643"},{"id":3,"firstName":"Hugo","lastName":"Revault D'allonnes","searchScore":0.1,"transferScore":0.1,"IBAN":"EE671268533723266740"},{"id":5,"firstName":"Aleksa","lastName":"Albijanic","searchScore":0.1,"transferScore":0.1,"IBAN":"IE69BOFI900017352248"},{"id":6,"firstName":"Étienne","lastName":"Lécrivain","searchScore":0.1,"transferScore":0.1,"IBAN":"SN22D85776372976559133696432"},{"id":7,"firstName":"Johann","lastName":"Bournazel","searchScore":0.1,"transferScore":0.1,"IBAN":"BA861024572914937364"},{"id":8,"firstName":"Maxence","lastName":"Dominici","searchScore":0.1,"transferScore":0.1,"IBAN":"LI3808800121276169917"}],"search":{}}
+{
+  "beneficiary": [
+    {
+      "id": 1,
+      "firstName": "Antoine",
+      "lastName": "Humbert",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "LT623685877971356213"
+    },
+    {
+      "id": 2,
+      "firstName": "Lucas",
+      "lastName": "Hervouet",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "GT82548278912345724988794643"
+    },
+    {
+      "id": 3,
+      "firstName": "Hugo",
+      "lastName": "Revault D'allonnes",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "EE671268533723266740"
+    },
+    {
+      "id": 4,
+      "firstName": "Annabel",
+      "lastName": "Leriche",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "98RZ84ZR8U8T43SVD5A4SG6"
+    },
+    {
+      "id": 5,
+      "firstName": "Aleksa",
+      "lastName": "Albijanic",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "IE69BOFI900017352248"
+    },
+    {
+      "id": 6,
+      "firstName": "Étienne",
+      "lastName": "Lécrivain",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "SN22D85776372976559133696432"
+    },
+    {
+      "id": 7,
+      "firstName": "Johann",
+      "lastName": "Bournazel",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "BA861024572914937364"
+    },
+    {
+      "id": 8,
+      "firstName": "Maxence",
+      "lastName": "Dominici",
+      "searchScore": 0.1,
+      "transferScore": 0.1,
+      "IBAN": "LI3808800121276169917"
+    }
+  ],
+  "search": {}
+}

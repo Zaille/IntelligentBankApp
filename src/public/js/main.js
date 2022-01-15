@@ -38,7 +38,7 @@ page('/', async () => {
         page.redirect('/account');
     }
 
-    const result = await fetch('/accounts/main', {
+    const result = await fetch('/accounts/1', {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
@@ -88,11 +88,15 @@ page('/contact', async () => {
 page('/contact/:contact_id', async (req) => {
     await renderTemplate(templates('/templates/profile.mustache'));
 
-    const firstname = document.getElementById("fname-value");
-    const lastname = document.getElementById("lname-value");
-    const iban = document.getElementById("iban-value");
+    const firstname = document.getElementById("input-1");
+    const lastname = document.getElementById("input-2");
+    const iban = document.getElementById("input-3");
     const edit = document.getElementById("div-edit");
     const button = document.getElementById("div-button");
+
+    document.getElementById("label-1").innerHTML = "First name:";
+    document.getElementById("label-2").innerHTML = "Last name:";
+    document.getElementById("label-3").innerHTML = "IBAN:";
 
     firstname.readOnly = true;
     lastname.readOnly = true;
@@ -144,9 +148,9 @@ page('/contact/:contact_id', async (req) => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 id: req.params.contact_id,
-                firstname: document.getElementById("fname-value").value,
-                lastname: document.getElementById("lname-value").value,
-                iban: document.getElementById("iban-value").value
+                firstname: firstname.value,
+                lastname: lastname.value,
+                iban: iban.value
             })
         };
 
@@ -160,6 +164,8 @@ page('/contact/:contact_id', async (req) => {
 
         edit.hidden = true;
         button.hidden = false;
+
+        //TODO : Reprendre l'ancienne valeur
     }
 
     const result = await fetch('/profile/' + req.params.contact_id, {
@@ -182,14 +188,18 @@ page('/new-contact', async () => {
 
     document.getElementById("div-button").hidden = true;
 
+    document.getElementById("label-1").innerHTML = "First Name:";
+    document.getElementById("label-2").innerHTML = "Last Name:";
+    document.getElementById("label-3").innerHTML = "IBAN:";
+
     document.getElementById("button-validate").onclick = async () => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                firstname: document.getElementById("fname-value").value,
-                lastname: document.getElementById("lname-value").value,
-                iban: document.getElementById("iban-value").value
+                firstname: document.getElementById("input-1").value,
+                lastname: document.getElementById("input-2").value,
+                iban: document.getElementById("input-3").value
             })
         };
 
@@ -206,6 +216,8 @@ page('/new-contact', async () => {
 
 page('/external_transfer/:contact_id', async (req) => {
     await renderTemplate(templates('/templates/transfer.mustache'));
+
+    document.getElementById('div-account').hidden = true;
 
     const result = await fetch('/profile/' + req.params.contact_id, {
         headers: {
@@ -226,7 +238,7 @@ page('/external_transfer/:contact_id', async (req) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                name: "main",
+                id: 1,
                 type: "deduct",
                 amount: (amount.value ? amount.value : amount.placeholder)
             })
@@ -244,6 +256,216 @@ page('/external_transfer/:contact_id', async (req) => {
 
 page('/account', async () => {
     await renderTemplate(templates('templates/list.mustache'));
+
+    document.getElementById('h2-list').innerHTML = "List of Accounts";
+
+    document.getElementById('button-create').onclick = () => {
+        page.redirect('/new-account');
+    }
+
+    document.getElementById("button-return").onclick = () => {
+        page.redirect('/');
+    }
+
+    const result = await fetch('/accounts', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+    let accounts = await result.json();
+
+    accounts.forEach((account) => {
+        const div = document.createElement("div");
+        const p = document.createElement("p");
+
+        div.onclick = () => {
+            page.redirect('/account/' + account.id);
+        }
+
+        p.innerHTML = `${account.name} - ${account.amount}€`;
+        document.getElementById("list").appendChild(div).appendChild(p);
+    })
+});
+
+page('/account/:account_id', async (req) => {
+    await renderTemplate(templates('/templates/profile.mustache'));
+
+    const name = document.getElementById("input-1");
+    const amount = document.getElementById("input-2");
+    const edit = document.getElementById("div-edit");
+    const button = document.getElementById("div-button");
+
+    document.getElementById("label-1").innerHTML = "Account:";
+    document.getElementById("label-2").innerHTML = "Amount:";
+    document.getElementById("div-3").hidden = true;
+
+    name.readOnly = true;
+    amount.readOnly = true;
+
+    edit.hidden = true;
+
+    document.getElementById("button-remove").onclick = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: req.params.account_id,
+            })
+        };
+
+        await fetch('/remove_account', requestOptions);
+
+        page.redirect('/account');
+    }
+
+    document.getElementById("button-transfer").onclick = () => {
+        page.redirect('/internal_transfer/' + req.params.account_id);
+    }
+
+    document.getElementById("button-edit").onclick = () => {
+        name.readOnly = false;
+
+        edit.hidden = false;
+        button.hidden = true;
+    }
+
+    document.getElementById("button-return").onclick = () => {
+        page.redirect('/account');
+    }
+
+    document.getElementById("button-validate").onclick = async () => {
+        name.readOnly = true;
+
+        edit.hidden = true;
+        button.hidden = false;
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: req.params.account_id,
+                name: name.value
+            })
+        };
+
+        await fetch('/update_account', requestOptions);
+    }
+
+    document.getElementById("button-cancel").onclick = () => {
+        name.readOnly = true;
+
+        edit.hidden = true;
+        button.hidden = false;
+    }
+
+    const result = await fetch('/accounts/' + req.params.account_id, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let account = await result.json();
+
+    name.value = account.name;
+    amount.value = account.amount;
+});
+
+page('/new-account', async () => {
+    await renderTemplate(templates('/templates/profile.mustache'));
+
+    document.getElementById("div-button").hidden = true;
+
+    document.getElementById("label-1").innerHTML = "Account:";
+    document.getElementById("div-2").hidden = true;
+    document.getElementById("div-3").hidden = true;
+
+    document.getElementById("button-validate").onclick = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: document.getElementById("input-1").value,
+            })
+        };
+
+        const result = await fetch('/add_account', requestOptions);
+
+        let json = await result.json();
+            page.redirect('/account/' + json.id);
+    }
+
+    document.getElementById("button-cancel").onclick = () => {
+        page.redirect('/account')
+    }
+});
+
+page('/internal_transfer/:account_id', async (req) => {
+    await renderTemplate(templates('/templates/transfer.mustache'));
+
+    document.getElementById('div-beneficiary').hidden = true;
+
+    const result = await fetch('/accounts', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let accounts = await result.json();
+
+    const select = document.getElementById('select-account');
+
+    accounts.forEach((account) => {
+        if(account.id !== parseInt(req.params.account_id)) {
+            const option = document.createElement("option");
+            option.value = account.id;
+            option.innerHTML = account.name;
+
+            select.appendChild(option);
+        }
+    })
+
+    document.getElementById("button-validate").onclick = async () => {
+        const amount = document.getElementById("input-amount");
+
+        let requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: req.params.account_id,
+                type: "deduct",
+                amount: (amount.value ? amount.value : amount.placeholder)
+            })
+        };
+
+        await fetch('/update_amount', requestOptions);
+
+        const idx = select.selectedIndex;
+        const id = document.getElementsByTagName("option")[idx].value;
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: id,
+                type: "add",
+                amount: (amount.value ? amount.value : amount.placeholder)
+            })
+        };
+
+        await fetch('/update_amount', requestOptions);
+
+        page.redirect('/account');
+    }
+
+    document.getElementById("button-cancel").onclick = () => {
+        page.redirect('/account/' + req.params.account_id);
+    }
 });
 
 /* -------- Error 404 -------- */
