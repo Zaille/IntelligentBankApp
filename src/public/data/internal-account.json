@@ -3,38 +3,27 @@
     {
       "id": 1,
       "name": "main",
-      "amount": 40000,
-      "transferScore": 0.1,
-      "clickScore": 0.1
+      "amount": 40000
     },
     {
       "id": 2,
       "name": "LJMO",
-      "amount": 10000,
-      "transferScore": 0.1,
-      "clickScore": 0.1
+      "amount": 10000
     },
     {
       "id": 3,
       "name": "TITR",
-      "amount": 3500,
-      "transferScore": 0.1,
-      "clickScore": 0.1
+      "amount": 3500
     },
     {
       "id": 4,
       "name": "PEL",
-      "amount": 25000,
-      "transferScore": 0.1,
-      "clickScore": 0.1
+      "amount": 25000
     },
     {
       "id": 5,
-      "name": "LIV A",
-      "amount": 13000,
-      "transferScore": 0.1,
-      "clickScore": 0.1
+      "name": "LIV B",
+      "amount": 12970
     }
-  ],
-  "search": {}
+  ]
 }

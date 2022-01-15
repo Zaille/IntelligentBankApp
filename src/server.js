@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 let PK_new = 0.05; // Default value for updating scores
-let min_TH = 0.3; // Minimum threshold to reach, to appear in the list of results
+// let min_TH = 0.3; // Minimum threshold to reach, to appear in the list of results
 
 /********** GET **********/
 
@@ -45,6 +45,13 @@ app.get('/accounts/:account_id', function (req, res) {
         json.account.forEach(account => {
             if( account.id === parseInt(req.params.account_id) ) res.json(account);
         })
+    });
+});
+
+app.get('/contacts/score', function (req, res) {
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+        res.json(json.beneficiary);
     });
 });
 
@@ -240,6 +247,69 @@ app.post('/feature/update_score', function (req, res) {
                 return console.error(err);
             } else {
                 res.json({score: json.feature});
+            }
+        });
+    });
+})
+
+app.post('/contact/update_score', function (req, res) {
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        for(let i = 0; i < json.beneficiary.length; i++){
+            if(json.beneficiary[i].id === parseInt(req.body.id)){
+                json.beneficiary[i][req.body.score] = json.beneficiary[i][req.body.score] + (1 - json.beneficiary[i][req.body.score]) * PK_new;
+            }
+        }
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                res.json({score: json.beneficiary});
+            }
+        });
+    });
+})
+
+app.post('/search/update_score', function (req, res) {
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        let search = {};
+
+        if(json.search.length !== 0) {
+            let found = false;
+            for (let i = 0; i < json.search.length; i++) {
+                if (json.search[i].string === req.body.string) {
+                    json.search[i].score = json.search[i].score + (1 - json.search[i].score) * PK_new;
+                    search = json.search[i];
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                search = {
+                    string: req.body.string,
+                    score: 0.1
+                };
+                json.search.push(search);
+            }
+        } else {
+            search = {
+                string: req.body.string,
+                score: 0.1
+            };
+            json.search.push(search);
+        }
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                res.json(search.score);
             }
         });
     });

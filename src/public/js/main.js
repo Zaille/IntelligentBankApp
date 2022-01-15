@@ -75,7 +75,7 @@ page('/', async () => {
             })
         };
 
-        await fetch('/feature/update_score', requestOptions); // TODO
+        await fetch('/feature/update_score', requestOptions);
 
         page.redirect('/contact');
     }
@@ -119,7 +119,7 @@ page('/contact', async () => {
         page.redirect('/');
     }
 
-    const result = await fetch('/contacts', {
+    let result = await fetch('/contacts', {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
@@ -127,6 +127,97 @@ page('/contact', async () => {
         method: 'GET',
     });
     let contacts = await result.json();
+
+    const search = document.getElementById('input-search');
+
+    search.oninput = async () => {
+        if (search.value.length > 3) { // If the user has typed more than 4 characters: Start the name search
+            const requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    string: search.value,
+                })
+            };
+
+            result = await fetch('/search/update_score', requestOptions);
+
+            const search_score = await result.json();
+
+            let contact_list = [];
+
+            result = await fetch('/contacts/score', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+                },
+                method: 'GET',
+            });
+            let contacts_scores = await result.json();
+
+            contacts.forEach((contact) => {
+                if(contact.firstName.toLowerCase().indexOf(search.value.toLowerCase()) === 0 || contact.lastName.toLowerCase().indexOf(search.value.toLowerCase()) === 0) {
+                    contacts_scores.forEach((score) => {
+                        if(contact.id === score.id){
+                            const confidence = parseFloat(search_score) * parseFloat(score.searchScore);
+                            if(confidence > 0.3) {
+                                contact_list.push({
+                                    id: contact.id,
+                                    firstname: contact.firstName,
+                                    lastname: contact.lastName,
+                                    confidence: confidence
+                                });
+                            }
+                        }
+                    })
+                }
+            });
+
+            contact_list.sort((a, b) => {
+                return a.confidence < b.confidence;
+            })
+
+            document.getElementById('list').innerHTML = '';
+
+            contact_list.forEach((contact) => {
+                const div = document.createElement("div");
+                const p = document.createElement("p");
+
+                div.onclick = async () => {
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            id: contact.id,
+                            score: "searchScore"
+                        })
+                    };
+
+                    await fetch('/contact/update_score', requestOptions);
+
+                    page.redirect('/contact/' + contact.id);
+                }
+
+
+                p.innerHTML = `${contact.firstname} ${contact.lastname}`;
+                document.getElementById("list").appendChild(div).appendChild(p);
+            });
+        } else {
+            document.getElementById('list').innerHTML = '';
+
+            contacts.forEach((contact) => {
+                const div = document.createElement("div");
+                const p = document.createElement("p");
+
+                div.onclick = () => {
+                    page.redirect('/contact/' + contact.id);
+                }
+
+                p.innerHTML = `${contact.firstName} ${contact.lastName}`;
+                document.getElementById("list").appendChild(div).appendChild(p);
+            })
+        }
+    }
 
     contacts.forEach((contact) => {
         const div = document.createElement("div");
