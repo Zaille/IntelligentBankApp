@@ -494,20 +494,62 @@ page('/account', async () => {
         page.redirect('/');
     }
 
-    const result = await fetch('/accounts', {
+    let result = await fetch('/accounts', {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
         },
         method: 'GET',
     });
+
     let accounts = await result.json();
 
+    result = await fetch('/account/score', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let accounts_scores = await result.json();
+
+    let account_list = [];
+
     accounts.forEach((account) => {
+        accounts_scores.forEach((score) => {
+            if(account.id === score.id){
+                const confidence = parseFloat(score.transferScore) * parseFloat(score.clickScore);
+                account_list.push({
+                    id: account.id,
+                    name: account.name,
+                    amount: account.amount,
+                    confidence: confidence
+                });
+            }
+        })
+    });
+
+    account_list.sort((a, b) => {
+        return a.confidence < b.confidence;
+    })
+
+    account_list.forEach((account) => {
         const div = document.createElement("div");
         const p = document.createElement("p");
 
-        div.onclick = () => {
+        div.onclick = async () => {
+            requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: account.id,
+                    score: "clickScore"
+                })
+            };
+
+            await fetch('/account/update_score', requestOptions);
+
             page.redirect('/account/' + account.id);
         }
 
@@ -686,6 +728,28 @@ page('/internal_transfer/:account_id', async (req) => {
         };
 
         await fetch('/update_amount', requestOptions);
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: req.params.account_id,
+                score: "transferScore"
+            })
+        };
+
+        await fetch('/account/update_score', requestOptions);
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: id,
+                score: "transferScore"
+            })
+        };
+
+        await fetch('/account/update_score', requestOptions);
 
         page.redirect('/account');
     }

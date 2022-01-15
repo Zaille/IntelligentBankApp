@@ -55,6 +55,14 @@ app.get('/contacts/score', function (req, res) {
     });
 });
 
+app.get('/account/score', function (req, res) {
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+        res.json(json.account);
+    });
+});
+
+
 app.get('/feature/score', function (req, res) {
     fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
         const json = JSON.parse(data);
@@ -73,8 +81,6 @@ app.post('/add_contact', function (req, res) {
             "id": parseInt(json.beneficiary[json.beneficiary.length-1].id) + 1,
             "firstName": req.body.firstname,
             "lastName": req.body.lastname,
-            "searchScore": 0.1,
-            "transferScore": 0.1,
             "IBAN": req.body.iban
         }
 
@@ -85,6 +91,24 @@ app.post('/add_contact', function (req, res) {
                 return console.error(err);
             } else {
                 res.json({id: newContact.id});
+            }
+        });
+    });
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        let newContact = {
+            "id": parseInt(json.beneficiary[json.beneficiary.length-1].id) + 1,
+            "transferScore": 0.1,
+            "clickScore": 0.1
+        }
+
+        json.beneficiary.push(newContact);
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
             }
         });
     });
@@ -131,11 +155,31 @@ app.post('/remove_contact', function (req, res) {
         fs.writeFile(path.join(__dirname, 'public/data/external-account.json'), JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
-            } else {
-                res.end();
             }
         });
     });
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        let beneficiary = [];
+
+        json.beneficiary.forEach((contact) => {
+            if(contact.id !== parseInt(req.body.id)) {
+                beneficiary.push(contact);
+            }
+        });
+
+        json.beneficiary = beneficiary;
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            }
+        });
+    });
+
+    res.end();
 });
 
 app.post('/update_amount', function (req, res) {
@@ -204,6 +248,28 @@ app.post('/remove_account', function (req, res) {
             }
         });
     });
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        let accounts = [];
+
+        json.account.forEach((account) => {
+            if(account.id !== parseInt(req.body.id)) {
+                accounts.push(account);
+            }
+        });
+
+        json.account = accounts;
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            }
+        });
+    });
+
+    res.end();
 });
 
 app.post('/add_account', function (req, res) {
@@ -214,9 +280,7 @@ app.post('/add_account', function (req, res) {
         let newAccount = {
             "id": parseInt(json.account[json.account.length-1].id) + 1,
             "name": req.body.name,
-            "amount": 0,
-            "transferScore": 0.1,
-            "clickScore": 0.1
+            "amount": 0
         }
 
         json.account.push(newAccount);
@@ -226,6 +290,24 @@ app.post('/add_account', function (req, res) {
                 return console.error(err);
             } else {
                 res.json({id: newAccount.id});
+            }
+        });
+    });
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        let newAccount = {
+            "id": parseInt(json.account[json.account.length-1].id) + 1,
+            "transferScore": 0.1,
+            "clickScore": 0.1
+        }
+
+        json.account.push(newAccount);
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
             }
         });
     });
