@@ -12,7 +12,10 @@
 /* ______________ Grid Layer ______________ */
 
 body {
-    margin: 40px;
+    margin: 30px;
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
 }
 
 .content {
@@ -21,12 +24,18 @@ body {
 
 .header {
     grid-area: header;
-    display: flex;
+    display: grid;
+    justify-content: center;
+    align-items: center;
     font-family: zillaslab,palatino,"Palatino Linotype",serif;
 }
 
 .footer {
     grid-area: footer;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-family: zillaslab,palatino,"Palatino Linotype",serif;
 }
 
 .wrapper {
