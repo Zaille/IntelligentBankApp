@@ -30,16 +30,71 @@ const renderTemplate = async function (template) {
 
 page('/', async () => {
     await renderTemplate(templates('/templates/home.mustache'));
-    document.getElementById('button-contacts').onclick = () => {
+
+    let bAccount = document.createElement("button");
+    bAccount.innerHTML = "Accounts";
+    bAccount.id = "button-accounts";
+
+    let bContact = document.createElement("button");
+    bContact.innerHTML = "Contacts";
+    bContact.id = "button-contacts";
+
+    const button = {
+        "account": bAccount,
+        "contact": bContact
+    }
+
+    let result = await fetch('/feature/score', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let features = await result.json();
+
+    features.sort((a, b) => {
+        return a.score < b.score;
+    });
+
+    features.forEach((feature) => {
+        document.getElementById('div-feature').appendChild(button[feature.name]);
+    });
+
+    document.getElementById('div-account').onclick = () => {
+        page.redirect('/account/1');
+    }
+
+    document.getElementById('button-contacts').onclick = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: "contact",
+            })
+        };
+
+        await fetch('/feature/update_score', requestOptions); // TODO
 
         page.redirect('/contact');
     }
 
-    document.getElementById('button-accounts').onclick = () => {
+    document.getElementById('button-accounts').onclick = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: "account",
+            })
+        };
+
+        await fetch('/feature/update_score', requestOptions);
+
         page.redirect('/account');
     }
 
-    const result = await fetch('/accounts/1', {
+    result = await fetch('/accounts/1', {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',

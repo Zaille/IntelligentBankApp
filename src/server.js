@@ -11,6 +11,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+let PK_new = 0.05; // Default value for updating scores
+let min_TH = 0.3; // Minimum threshold to reach, to appear in the list of results
+
 /********** GET **********/
 
 app.get('/contacts', function (req, res) {
@@ -42,6 +45,13 @@ app.get('/accounts/:account_id', function (req, res) {
         json.account.forEach(account => {
             if( account.id === parseInt(req.params.account_id) ) res.json(account);
         })
+    });
+});
+
+app.get('/feature/score', function (req, res) {
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+        res.json(json.feature);
     });
 });
 
@@ -209,6 +219,27 @@ app.post('/add_account', function (req, res) {
                 return console.error(err);
             } else {
                 res.json({id: newAccount.id});
+            }
+        });
+    });
+})
+
+app.post('/feature/update_score', function (req, res) {
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        for(let i = 0; i < json.feature.length; i++){
+            if(json.feature[i].name === req.body.name){
+                json.feature[i].score = json.feature[i].score + (1 - json.feature[i].score) * PK_new;
+            }
+        }
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                res.json({score: json.feature});
             }
         });
     });
