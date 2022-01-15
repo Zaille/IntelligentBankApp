@@ -273,6 +273,27 @@ app.post('/contact/update_score', function (req, res) {
     });
 })
 
+app.post('/account/update_score', function (req, res) {
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        for(let i = 0; i < json.account.length; i++){
+            if(json.account[i].id === parseInt(req.body.id)){
+                json.account[i][req.body.score] = json.account[i][req.body.score] + (1 - json.account[i][req.body.score]) * PK_new;
+            }
+        }
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                res.json({score: json.account});
+            }
+        });
+    });
+})
+
 app.post('/search/update_score', function (req, res) {
 
     fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {

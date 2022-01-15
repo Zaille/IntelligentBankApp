@@ -181,8 +181,6 @@ contact_list = [];
 
             document.getElementById('list').innerHTML = '';
 
-            console.log(contact_list);
-
             contact_list.forEach((contact) => {
                 const div = document.createElement("div");
                 const p = document.createElement("p");
@@ -221,7 +219,7 @@ contact_list = [];
             contacts.forEach((contact) => {
                 contacts_scores.forEach((score) => {
                     if(contact.id === score.id){
-                        const confidence = parseFloat(score.clickScore) * parseFloat(score.searchScore);
+                        const confidence = parseFloat(score.transferScore) * parseFloat(score.searchScore);
                         contact_list.push({
                             id: contact.id,
                             firstname: contact.firstName,
@@ -262,7 +260,7 @@ contact_list = [];
     contacts.forEach((contact) => {
         contacts_scores.forEach((score) => {
             if(contact.id === score.id){
-                const confidence = parseFloat(score.clickScore) * parseFloat(score.searchScore);
+                const confidence = parseFloat(score.transferScore) * parseFloat(score.searchScore);
                 contact_list.push({
                     id: contact.id,
                     firstname: contact.firstName,
@@ -439,7 +437,7 @@ page('/external_transfer/:contact_id', async (req) => {
     document.getElementById("button-validate").onclick = async () => {
         const amount = document.getElementById("input-amount");
 
-        const requestOptions = {
+        let requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -450,6 +448,28 @@ page('/external_transfer/:contact_id', async (req) => {
         };
 
         await fetch('/update_amount', requestOptions);
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: 1,
+                score: "transferScore"
+            })
+        };
+
+        await fetch('/account/update_score', requestOptions);
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: req.params.contact_id,
+                score: "transferScore"
+            })
+        };
+
+        await fetch('/contact/update_score', requestOptions);
 
         page.redirect('/');
     }
