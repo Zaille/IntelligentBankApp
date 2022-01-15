@@ -59,6 +59,10 @@ page('/contact', async () => {
         page.redirect('/new-contact');
     }
 
+    document.getElementById("button-return").onclick = () => {
+        page.redirect('/');
+    }
+
     const result = await fetch('/contacts', {
         headers: {
             'Accept': 'application/json',
@@ -121,6 +125,10 @@ page('/contact/:contact_id', async (req) => {
 
         edit.hidden = false;
         button.hidden = true;
+    }
+
+    document.getElementById("button-return").onclick = () => {
+        page.redirect('/contact');
     }
 
     document.getElementById("button-validate").onclick = async () => {
