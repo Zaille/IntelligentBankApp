@@ -2,7 +2,7 @@
   "beneficiary": [
     {
       "id": 1,
-      "firstName": "Anto",
+      "firstName": "Antoine",
       "lastName": "Humbert",
       "searchScore": 0.1,
       "transferScore": 0.1,

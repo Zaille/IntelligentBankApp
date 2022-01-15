@@ -84,10 +84,37 @@ app.post('/update_contact', function (req, res) {
         fs.writeFile('public/data/external-account.json', JSON.stringify(json), function(err) {
             if (err) {
                 return console.error(err);
+            } else {
+                res.end();
             }
         });
     });
-})
+});
+
+app.post('/remove_contact', function (req, res) {
+
+    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        let beneficiary = [];
+
+        json.beneficiary.forEach((contact) => {
+            if(contact.id !== parseInt(req.body.id)) {
+                beneficiary.push(contact);
+            }
+        });
+
+        json.beneficiary = beneficiary;
+
+        fs.writeFile('public/data/external-account.json', JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                res.end();
+            }
+        });
+    });
+});
 
 /* Default path */
 app.get('*', function (req, res) {

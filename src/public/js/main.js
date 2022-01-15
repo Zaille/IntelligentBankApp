@@ -96,6 +96,20 @@ page('/contact/:contact_id', async (req) => {
 
     edit.hidden = true;
 
+    document.getElementById("button-remove").onclick = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: req.params.contact_id,
+            })
+        };
+
+        await fetch('/remove_contact', requestOptions);
+
+        page.redirect('/contact');
+    }
+
     document.getElementById("button-transfer").onclick = () => {
         page.redirect('/external_transfer/' + req.params.contact_id);
     }
