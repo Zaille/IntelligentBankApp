@@ -130,7 +130,11 @@ page('/contact', async () => {
 
     const search = document.getElementById('input-search');
 
+    let contact_list = [];
+
     search.oninput = async () => {
+contact_list = [];
+
         if (search.value.length > 3) { // If the user has typed more than 4 characters: Start the name search
             const requestOptions = {
                 method: 'POST',
@@ -143,8 +147,6 @@ page('/contact', async () => {
             result = await fetch('/search/update_score', requestOptions);
 
             const search_score = await result.json();
-
-            let contact_list = [];
 
             result = await fetch('/contacts/score', {
                 headers: {
@@ -159,7 +161,7 @@ page('/contact', async () => {
                 if(contact.firstName.toLowerCase().indexOf(search.value.toLowerCase()) === 0 || contact.lastName.toLowerCase().indexOf(search.value.toLowerCase()) === 0) {
                     contacts_scores.forEach((score) => {
                         if(contact.id === score.id){
-                            const confidence = parseFloat(search_score) * parseFloat(score.searchScore);
+                            const confidence = parseFloat(search_score) * parseFloat(score.transferScore);
                             if(confidence > 0.3) {
                                 contact_list.push({
                                     id: contact.id,
@@ -178,6 +180,8 @@ page('/contact', async () => {
             })
 
             document.getElementById('list').innerHTML = '';
+
+            console.log(contact_list);
 
             contact_list.forEach((contact) => {
                 const div = document.createElement("div");
@@ -205,7 +209,34 @@ page('/contact', async () => {
         } else {
             document.getElementById('list').innerHTML = '';
 
+            result = await fetch('/contacts/score', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+                },
+                method: 'GET',
+            });
+            let contacts_scores = await result.json();
+
             contacts.forEach((contact) => {
+                contacts_scores.forEach((score) => {
+                    if(contact.id === score.id){
+                        const confidence = parseFloat(score.clickScore) * parseFloat(score.searchScore);
+                        contact_list.push({
+                            id: contact.id,
+                            firstname: contact.firstName,
+                            lastname: contact.lastName,
+                            confidence: confidence
+                        });
+                    }
+                })
+            });
+
+            contact_list.sort((a, b) => {
+                return a.confidence < b.confidence;
+            })
+
+            contact_list.forEach((contact) => {
                 const div = document.createElement("div");
                 const p = document.createElement("p");
 
@@ -213,13 +244,40 @@ page('/contact', async () => {
                     page.redirect('/contact/' + contact.id);
                 }
 
-                p.innerHTML = `${contact.firstName} ${contact.lastName}`;
+                p.innerHTML = `${contact.firstname} ${contact.lastname}`;
                 document.getElementById("list").appendChild(div).appendChild(p);
             })
         }
     }
 
+    result = await fetch('/contacts/score', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+    let contacts_scores = await result.json();
+
     contacts.forEach((contact) => {
+        contacts_scores.forEach((score) => {
+            if(contact.id === score.id){
+                const confidence = parseFloat(score.clickScore) * parseFloat(score.searchScore);
+                contact_list.push({
+                    id: contact.id,
+                    firstname: contact.firstName,
+                    lastname: contact.lastName,
+                    confidence: confidence
+                });
+            }
+        })
+    });
+
+    contact_list.sort((a, b) => {
+        return a.confidence < b.confidence;
+    })
+
+    contact_list.forEach((contact) => {
         const div = document.createElement("div");
         const p = document.createElement("p");
 
@@ -227,7 +285,7 @@ page('/contact', async () => {
             page.redirect('/contact/' + contact.id);
         }
 
-        p.innerHTML = `${contact.firstName} ${contact.lastName}`;
+        p.innerHTML = `${contact.firstname} ${contact.lastname}`;
         document.getElementById("list").appendChild(div).appendChild(p);
     })
 });
