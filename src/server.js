@@ -24,7 +24,6 @@ app.get('/profile/:contact_id', function (req, res) {
     fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
         const json = JSON.parse(data);
         json.beneficiary.forEach(contact => {
-            console.log(contact);
             if( contact.id === parseInt(req.params.contact_id) ) res.json(contact);
         })
     });
@@ -62,6 +61,29 @@ app.post('/add_contact', function (req, res) {
                 return console.error(err);
             } else {
                 res.json({id: newContact.id});
+            }
+        });
+    });
+})
+
+app.post('/update_contact', function (req, res) {
+
+    fs.readFile('public/data/external-account.json', 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        for(let i = 0; i < json.beneficiary.length; i++ ){
+            if(json.beneficiary[i].id === parseInt(req.body.id)) {
+                json.beneficiary[i].firstName = req.body.firstname;
+                json.beneficiary[i].lastName = req.body.lastname;
+                json.beneficiary[i].IBAN = req.body.iban;
+            }
+        }
+
+        // console.log(json.beneficiary);
+
+        fs.writeFile('public/data/external-account.json', JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
             }
         });
     });

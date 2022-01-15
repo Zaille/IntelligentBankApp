@@ -109,14 +109,26 @@ page('/contact/:contact_id', async (req) => {
         button.hidden = true;
     }
 
-    document.getElementById("button-validate").onclick = () => {
+    document.getElementById("button-validate").onclick = async () => {
         firstname.readOnly = true;
         lastname.readOnly = true;
         iban.readOnly = true;
 
         edit.hidden = true;
         button.hidden = false;
-        // TODO : Update database
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: req.params.contact_id,
+                firstname: document.getElementById("fname-value").value,
+                lastname: document.getElementById("lname-value").value,
+                iban: document.getElementById("iban-value").value
+            })
+        };
+
+        await fetch('/update_contact', requestOptions);
     }
 
     document.getElementById("button-cancel").onclick = () => {
@@ -137,8 +149,6 @@ page('/contact/:contact_id', async (req) => {
     });
 
     let contact = await result.json();
-
-    console.log(contact);
 
     firstname.value = contact.firstName;
     lastname.value = contact.lastName;
