@@ -1,1 +1,119 @@
-{"feature":[{"name":"account","score":0.30359715625},{"name":"contact","score":0.371496433515625}],"beneficiary":[{"id":1,"searchScore":0.1,"transferScore":0.18775000000000003},{"id":2,"searchScore":0.1,"transferScore":0.22836250000000002},{"id":3,"searchScore":0.1,"transferScore":0.1},{"id":4,"searchScore":0.1,"transferScore":0.1},{"id":5,"searchScore":0.1,"transferScore":0.1},{"id":6,"searchScore":0.1,"transferScore":0.1},{"id":7,"searchScore":0.1,"transferScore":0.1},{"id":8,"searchScore":0.1,"transferScore":0.1}],"account":[{"id":1,"transferScore":0.30359715625,"clickScore":0.1},{"id":2,"transferScore":0.1,"clickScore":0.1},{"id":3,"transferScore":0.3384172984375,"clickScore":0.371496433515625},{"id":4,"transferScore":0.14500000000000002,"clickScore":0.18775000000000003},{"id":5,"transferScore":0.30359715625,"clickScore":0.1},{"id":9,"transferScore":0.1,"clickScore":0.1},{"id":10,"transferScore":0.1,"clickScore":0.1}],"search":[{"string":"luca","score":0.1},{"string":"anto","score":0.14500000000000002},{"string":"antoi","score":0.1}]}
+{
+  "feature": [
+    {
+      "name": "account",
+      "score": 0.5379921250484455
+    },
+    {
+      "name": "contact",
+      "score": 0.603885998213411
+    }
+  ],
+  "beneficiary": [
+    {
+      "id": 1,
+      "searchScore": 0.1,
+      "transferScore": 0.18775000000000003
+    },
+    {
+      "id": 2,
+      "searchScore": 0.14500000000000002,
+      "transferScore": 0.30359715625
+    },
+    {
+      "id": 3,
+      "searchScore": 0.1,
+      "transferScore": 0.266944375
+    },
+    {
+      "id": 4,
+      "searchScore": 0.1,
+      "transferScore": 0.1
+    },
+    {
+      "id": 5,
+      "searchScore": 0.1,
+      "transferScore": 0.1
+    },
+    {
+      "id": 6,
+      "searchScore": 0.1,
+      "transferScore": 0.1
+    },
+    {
+      "id": 7,
+      "searchScore": 0.1,
+      "transferScore": 0.14500000000000002
+    },
+    {
+      "id": 8,
+      "searchScore": 0.1,
+      "transferScore": 0.1
+    }
+  ],
+  "account": [
+    {
+      "id": 1,
+      "transferScore": 0.6934945363406965,
+      "clickScore": 0.30359715625
+    },
+    {
+      "id": 2,
+      "transferScore": 0.14500000000000002,
+      "clickScore": 0.14500000000000002
+    },
+    {
+      "id": 3,
+      "transferScore": 0.461136754685459,
+      "clickScore": 0.371496433515625
+    },
+    {
+      "id": 4,
+      "transferScore": 0.3384172984375,
+      "clickScore": 0.266944375
+    },
+    {
+      "id": 5,
+      "transferScore": 0.40292161183984376,
+      "clickScore": 0.22836250000000002
+    },
+    {
+      "id": 9,
+      "transferScore": 0.1,
+      "clickScore": 0.1
+    },
+    {
+      "id": 10,
+      "transferScore": 0.1,
+      "clickScore": 0.1
+    }
+  ],
+  "search": [
+    {
+      "string": "luca",
+      "score": 0.40292161183984376
+    },
+    {
+      "string": "anto",
+      "score": 0.8343766807879814
+    },
+    {
+      "string": "antoi",
+      "score": 0.7859558032702008
+    },
+    {
+      "string": "lucas",
+      "score": 0.3384172984375
+    }
+  ],
+  "transfer": [
+    {
+      "amount": "30",
+      "score": 0.371496433515625
+    },
+    {
+      "amount": "50",
+      "score": 0.266944375
+    }
+  ]
+}

@@ -62,6 +62,12 @@ app.get('/account/score', function (req, res) {
     });
 });
 
+app.get('/transfer/score', function (req, res) {
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+        res.json(json.transfer);
+    });
+});
 
 app.get('/feature/score', function (req, res) {
     fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
@@ -371,6 +377,48 @@ app.post('/account/update_score', function (req, res) {
                 return console.error(err);
             } else {
                 res.json({score: json.account});
+            }
+        });
+    });
+})
+
+app.post('/transfer/update_score', function (req, res) {
+
+    fs.readFile(path.join(__dirname, 'public/data/scores.json'), 'utf8', (err, data) => {
+        const json = JSON.parse(data);
+
+        let transfer = {};
+
+        if(json.transfer.length !== 0) {
+            let found = false;
+            for (let i = 0; i < json.transfer.length; i++) {
+                if (json.transfer[i].amount === req.body.amount) {
+                    json.transfer[i].score = json.transfer[i].score + (1 - json.transfer[i].score) * PK_new;
+                    transfer = json.transfer[i];
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                transfer = {
+                    amount: req.body.amount,
+                    score: 0.1
+                };
+                json.transfer.push(transfer);
+            }
+        } else {
+            transfer = {
+                amount: req.body.amount,
+                score: 0.1
+            };
+            json.transfer.push(transfer);
+        }
+
+        fs.writeFile(path.join(__dirname, 'public/data/scores.json'), JSON.stringify(json), function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                res.json({score: json.transfer});
             }
         });
     });

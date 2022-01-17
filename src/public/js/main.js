@@ -162,7 +162,8 @@ page('/contact', async () => {
                     contacts_scores.forEach((score) => {
                         if(contact.id === score.id){
                             const confidence = parseFloat(search_score) * parseFloat(score.transferScore);
-                            if(confidence > 0.3) {
+                            console.log(confidence);
+                            if(confidence >= 0.1) {
                                 contact_list.push({
                                     id: contact.id,
                                     firstname: contact.firstName,
@@ -174,7 +175,7 @@ page('/contact', async () => {
                     })
                 }
             });
-
+            
             contact_list.sort((a, b) => {
                 return a.confidence < b.confidence;
             })
@@ -424,7 +425,45 @@ page('/external_transfer/:contact_id', async (req) => {
 
     document.getElementById('div-account').hidden = true;
 
-    const result = await fetch('/profile/' + req.params.contact_id, {
+    let result = await fetch('/accounts', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let accounts = await result.json();
+
+    let amount = document.getElementById("input-amount");
+
+    result = await fetch('/transfer/score', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let transfers_scores = await result.json();
+
+    let max_score = 0;
+
+    transfers_scores.forEach((transfer) => {
+        if(transfer.score >= 0.3){
+            if(transfer.score > max_score){
+                accounts.forEach((account) => {
+                    if(1 === account.id){
+                        if(account.amount >= transfer.amount){
+                            amount.placeholder = transfer.amount;
+                        }
+                    }
+                });
+            }
+        }
+    })
+
+    result = await fetch('/profile/' + req.params.contact_id, {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
@@ -437,7 +476,7 @@ page('/external_transfer/:contact_id', async (req) => {
     document.getElementById('input-beneficiary').value = `${contact.firstName} ${contact.lastName}`;
 
     document.getElementById("button-validate").onclick = async () => {
-        const amount = document.getElementById("input-amount");
+        amount = document.getElementById("input-amount");
 
         let requestOptions = {
             method: 'POST',
@@ -472,6 +511,16 @@ page('/external_transfer/:contact_id', async (req) => {
         };
 
         await fetch('/contact/update_score', requestOptions);
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                amount: (amount.value ? amount.value : amount.placeholder)
+            })
+        };
+
+        await fetch('/transfer/update_score', requestOptions);
 
         page.redirect('/');
     }
@@ -679,6 +728,7 @@ page('/internal_transfer/:account_id', async (req) => {
     await renderTemplate(templates('/templates/transfer.mustache'));
 
     document.getElementById('div-beneficiary').hidden = true;
+    const amount = document.getElementById("input-amount");
 
     let result = await fetch('/accounts', {
         headers: {
@@ -689,6 +739,32 @@ page('/internal_transfer/:account_id', async (req) => {
     });
 
     let accounts = await result.json();
+
+    result = await fetch('/transfer/score', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        method: 'GET',
+    });
+
+    let transfers_scores = await result.json();
+
+    let max_score = 0;
+
+    transfers_scores.forEach((transfer) => {
+        if(transfer.score >= 0.3){
+            if(transfer.score > max_score){
+                accounts.forEach((account) => {
+                    if(parseInt(req.params.account_id) === account.id){
+                        if(account.amount >= transfer.amount){
+                            amount.placeholder = transfer.amount;
+                        }
+                    }
+                });
+            }
+        }
+    })
 
     result = await fetch('/account/score', {
         headers: {
@@ -732,8 +808,6 @@ page('/internal_transfer/:account_id', async (req) => {
     })
 
     document.getElementById("button-validate").onclick = async () => {
-        const amount = document.getElementById("input-amount");
-
         let requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -782,6 +856,16 @@ page('/internal_transfer/:account_id', async (req) => {
         };
 
         await fetch('/account/update_score', requestOptions);
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                amount: (amount.value ? amount.value : amount.placeholder)
+            })
+        };
+
+        await fetch('/transfer/update_score', requestOptions);
 
         page.redirect('/account');
     }
