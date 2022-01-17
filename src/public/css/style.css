@@ -22,12 +22,30 @@ body {
     grid-area: content;
 }
 
+.button {
+    transition-duration: 0.4s;
+}
+
+.button:hover {
+    background-color: #444; /* Green */
+    color: white;
+}
+
 .header {
     grid-area: header;
     display: grid;
     justify-content: center;
     align-items: center;
     font-family: zillaslab,palatino,"Palatino Linotype",serif;
+}
+
+.elmt:hover {
+    background-color: #fff;
+    border-radius: 5px;
+    color: #444;
+    padding-left: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 
 .footer {

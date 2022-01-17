@@ -1,19 +1,27 @@
 <body>
-    <h2>Transfer</h2>
-    <div>
-        <label for="input-amount">Amount:</label>
-        <p><input type="text" id="input-amount" placeholder="30">€</p>
-    </div>
-    <div id="div-account">
-        <label for="select-account">Transfer to:</label>
-        <select id="select-account"></select>
-    </div>
-    <div id="div-beneficiary">
-        <label for="input-beneficiary">Beneficiary:</label>
-        <input type="text" id="input-beneficiary" disabled>
-    </div>
-    <div>
-        <button id="button-validate">Validate</button>
-        <button id="button-cancel">Cancel</button>
+    <div class="wrapper">
+        <div class="box header">
+            <h2>Transfer</h2>
+        </div>
+        <div class="box content">
+            <div>
+                <label for="input-amount">Amount:</label>
+                <p><input type="text" id="input-amount" placeholder="30">€</p>
+            </div>
+            <div id="div-account">
+                <label for="select-account">Transfer to:</label>
+                <select id="select-account"></select>
+            </div>
+            <div id="div-beneficiary">
+                <label for="input-beneficiary">Beneficiary:</label>
+                <input type="text" id="input-beneficiary" disabled>
+            </div>
+        </div>
+        <div class="box footer" id="div-feature">
+            <div>
+                <button id="button-validate">Validate</button>
+                <button id="button-cancel">Cancel</button>
+            </div>
+        </div>
     </div>
 </body>

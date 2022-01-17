@@ -183,6 +183,7 @@ page('/contact', async () => {
 
             contact_list.forEach((contact) => {
                 const div = document.createElement("div");
+
                 const p = document.createElement("p");
 
                 div.onclick = async () => {
@@ -277,6 +278,7 @@ page('/contact', async () => {
 
     contact_list.forEach((contact) => {
         const div = document.createElement("div");
+        div.classList.add("elmt");
         const p = document.createElement("p");
 
         div.onclick = () => {
@@ -536,6 +538,7 @@ page('/account', async () => {
 
     account_list.forEach((account) => {
         const div = document.createElement("div");
+        div.classList.add("elmt");
         const p = document.createElement("p");
 
         div.onclick = async () => {
